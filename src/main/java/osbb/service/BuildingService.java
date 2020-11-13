@@ -9,9 +9,9 @@ import osbb.data.entity.Building;
 import osbb.data.entity.User;
 import osbb.data.repository.BuildingRepository;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class BuildingService {
@@ -30,10 +30,11 @@ public class BuildingService {
                 .setAddress(buildingCreateDto.getAddress())
                 .setApartmentQuantity(buildingCreateDto.getApartmentQuantity())
                 .setBudgetQuantity(buildingCreateDto.getBudgetQuantity());
-
         Building savedBuilding = buildingRepository.save(entity);
-        addUserToList(users, buildingCreateDto.getAdminLogin(), savedBuilding, ADMIN_NUMBER,
-                buildingCreateDto.getAdminPassword());
+
+        addAdminUserToList(users, buildingCreateDto.getAdminLogin(), savedBuilding, ADMIN_NUMBER,
+                buildingCreateDto.getAdminPassword(), buildingCreateDto.getFirstName(),
+                buildingCreateDto.getLastName(), BigInteger.ONE);
         generateUserAccounts(users, savedBuilding);
         userService.create(users);
 
@@ -47,19 +48,38 @@ public class BuildingService {
         String apartmentValue;
 
         for (int i = 0; i < savedBuilding.getApartmentQuantity(); i++) {
-            int apartmentNumber = i + 1;
+            int startFromSecondIndex = i + 1;
+            int apartmentNumber = startFromSecondIndex;
             apartmentValue = String.valueOf(apartmentNumber);
-            addUserToList(users, apartmentValue, savedBuilding, apartmentNumber, apartmentValue);
+
+            addUserToList(users, apartmentValue, savedBuilding, apartmentNumber,
+                    apartmentValue, BigInteger.valueOf(startFromSecondIndex));
         }
     }
 
-    private List<User> addUserToList(List<User> users, String login, Building building,
-                                     Integer apartmentNumber, String password) {
+    private List<User> addUserToList(List<User> users, String login, Building building, Integer apartmentNumber,
+                                     String password, BigInteger id) {
         User user = new User()
                 .setLogin(login)
                 .setBuilding(building)
                 .setApartmentNumber(apartmentNumber)
-                .setPassword(password);
+                .setPassword(password)
+                .setId(id);
+
+        users.add(user);
+        return users;
+    }
+
+    private List<User> addAdminUserToList(List<User> users, String login, Building building, Integer apartmentNumber,
+                                          String password, String firstName, String lastName, BigInteger id) {
+        User user = new User()
+                .setLogin(login)
+                .setBuilding(building)
+                .setApartmentNumber(apartmentNumber)
+                .setPassword(password)
+                .setLastName(lastName)
+                .setFirstName(firstName)
+                .setId(id);
 
         users.add(user);
         return users;

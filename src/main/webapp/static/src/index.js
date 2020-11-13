@@ -1,11 +1,10 @@
-import React, { lazy, Suspense } from "react";
+import React, {Suspense} from "react";
 import ReactDOM from "react-dom";
-import AppComponent from "./component/app.component"
+import RoutingComponent from "./component/RoutingComponent";
 
-const App = lazy(() => import("./component/app.component"));
 ReactDOM.render(
     <Suspense fallback={<p>loading....</p>}>
-        <AppComponent />
+        <RoutingComponent/>
     </Suspense>,
     document.querySelector("#root")
 );

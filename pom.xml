@@ -25,7 +25,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
     <flyway.user>root</flyway.user>
-    <flyway.url>jdbc:mariadb://localhost:3306/osbb_database</flyway.url>
+    <flyway.url>jdbc:mariadb://localhost:3306/osbb_project</flyway.url>
     <flyway.password>password</flyway.password>
   </properties>
 
